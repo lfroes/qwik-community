@@ -1,8 +1,13 @@
+type User = {
+  username: string;
+};
+
 export interface Post {
   id: string;
   title: string;
   body: string;
   createdAt: string;
+  user: User;
 }
 
 type Meta = {

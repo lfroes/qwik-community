@@ -39,6 +39,9 @@ export default component$(() => {
         <h1 class="mb-4 text-4xl font-bold">{post.value.title}</h1>
         <p class="mb-6 text-muted-foreground">{formatDate(randomDate())}</p>
         <div class="whitespace-pre-wrap">{post.value.body}</div>
+        <p class="mt-2 text-muted-foreground">
+          Written by: {post.value.user.username}
+        </p>
       </article>
     </section>
   );

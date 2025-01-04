@@ -18,7 +18,10 @@ export const GET_POST = `
       post(id: $id) {
         id
         title
-        body 
+        body
+        user {
+          username
+        }
       }
     }
 `;
