@@ -5,10 +5,14 @@ export interface Post {
   createdAt: string;
 }
 
+type Meta = {
+  totalCount: number;
+};
+
 export interface PostsResponse {
   posts: {
     data: Post[];
-    total: number;
+    meta: Meta;
   };
 }
 
