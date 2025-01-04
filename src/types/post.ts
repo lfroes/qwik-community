@@ -9,6 +9,10 @@ type Meta = {
   totalCount: number;
 };
 
+export interface PostResponse {
+  post: Post;
+}
+
 export interface PostsResponse {
   posts: {
     data: Post[];

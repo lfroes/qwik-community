@@ -19,7 +19,7 @@ export const PostCard = component$<PostCardProps>((props) => {
 
   return (
     <div class="rounded-lg border bg-card p-4 transition-shadow hover:shadow-lg">
-      <Link href={`/post/${post.id}`}>
+      <Link href={`/posts/${post.id}`}>
         <h2
           class="mb-2 text-xl font-semibold"
           dangerouslySetInnerHTML={highlightText(post.title)}
