@@ -12,7 +12,7 @@ export const Posts = component$<PostsProps>((props) => {
   return (
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
-        <div>{post.title}</div>
+        <div key={post.id}>{post.title}</div>
       ))}
     </div>
   );
