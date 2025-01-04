@@ -21,7 +21,7 @@ export const usePostsLoader = routeLoader$(async () => {
     options: {
       paginate: {
         page: 1,
-        limit: 10,
+        limit: 9,
       },
     },
   });
@@ -34,7 +34,7 @@ export default component$(() => {
   const store = useStore<PostsStore>({
     ...initialPostsState,
     posts: postsSignal.value.data,
-    totalPages: Math.ceil(postsSignal.value.meta.totalCount / 10),
+    totalPages: Math.ceil(postsSignal.value.meta.totalCount / 9),
   });
 
   useContextProvider(PostsContext, store);
