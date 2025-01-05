@@ -15,6 +15,7 @@ import {
   initialPostsState,
 } from "~/lib/store/posts.context";
 import { Posts } from "~/components/Posts/Posts";
+import { SearchBar } from "~/components/SearchBar/SearchBar";
 
 export const usePostsLoader = routeLoader$(async () => {
   const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS, {
@@ -42,6 +43,9 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => store.searchTerm);
 
+    //WARN: This is without a debounce funtion because the amount of data is small.
+    // In case of a large amount of data, consider using a debounce function.
+
     const filtered = store.posts.filter(
       (post) =>
         post.title.toLowerCase().includes(store.searchTerm.toLowerCase()) ||
@@ -59,11 +63,10 @@ export default component$(() => {
           //TODO: Add button to create Posts
         }
       </div>
-
-      {
-        //TODO:  Create SearchBar component
-      }
-
+      <SearchBar
+        value={store.searchTerm}
+        onSearch$={(value) => (store.searchTerm = value)}
+      />
       <Posts
         posts={store.localPosts.length ? store.localPosts : store.posts}
         searchTerm={store.searchTerm}

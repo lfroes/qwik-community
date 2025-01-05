@@ -8,12 +8,12 @@ export interface PostsProps {
 }
 
 export const Posts = component$<PostsProps>((props) => {
-  const { posts } = props;
+  const { posts, searchTerm } = props;
 
   return (
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard key={post.id} post={post} searchTerm={searchTerm} />
       ))}
     </div>
   );
