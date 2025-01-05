@@ -1,15 +1,19 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, $, PropFunction } from "@builder.io/qwik";
 import { Input } from "../ui/Input";
-
-// TODO: Create Input Component
 
 export interface SearchBarProps {
   value: string;
-  onSearch$: (value: string) => void;
+  onSearch$: PropFunction<(value: string) => void>;
 }
 
 export const SearchBar = component$<SearchBarProps>((props) => {
   const { value, onSearch$ } = props;
+
+  const handleInput$ = $((e: Event) => {
+    const target = e.target as HTMLInputElement;
+    onSearch$(target.value);
+  });
+
   return (
     <section class="mb-6">
       {
@@ -17,7 +21,7 @@ export const SearchBar = component$<SearchBarProps>((props) => {
           type="search"
           placeholder="Search posts..."
           value={value}
-          onInput$={(e) => onSearch$((e.target as HTMLInputElement).value)}
+          onInput$={handleInput$}
         />
       }
     </section>

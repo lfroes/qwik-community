@@ -1,4 +1,4 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, Slot, PropsOf } from "@builder.io/qwik";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "~/lib/utils";
 
@@ -33,9 +33,10 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps extends VariantProps<typeof buttonVariants> {
-  class?: string;
-}
+export type ButtonProps = VariantProps<typeof buttonVariants> &
+  PropsOf<"button"> & {
+    class?: string;
+  };
 
 export const Button = component$<ButtonProps>((props) => {
   const { variant, size, class: className, ...rest } = props;
