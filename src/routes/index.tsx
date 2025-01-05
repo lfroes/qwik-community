@@ -16,18 +16,23 @@ import {
 } from "~/lib/store/posts.context";
 import { Posts } from "~/components/Posts/Posts";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
+import { Pagination } from "~/components/Pagination/Pagination";
 
-export const usePostsLoader = routeLoader$(async () => {
+async function fetchPosts(page: number = 1, limit: number = 9) {
   const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS, {
     options: {
       paginate: {
-        page: 1,
-        limit: 9,
+        page,
+        limit,
       },
     },
   });
 
   return posts;
+}
+
+export const usePostsLoader = routeLoader$(async () => {
+  return await fetchPosts(1);
 });
 
 export default component$(() => {
@@ -43,7 +48,7 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => store.searchTerm);
 
-    //WARN: This is without a debounce funtion because the amount of data is small.
+    //WARN:: This is without a debounce funtion because the amount of data is small.
     // In case of a large amount of data, consider using a debounce function.
 
     const filtered = store.posts.filter(
@@ -53,6 +58,25 @@ export default component$(() => {
     );
 
     store.localPosts = filtered;
+  });
+
+  // Hanlde Pagination
+  useTask$(({ track }) => {
+    const page = track(() => store.currentPage);
+
+    if (page === 1) return;
+
+    //TODO: Create a Suspense loader for this
+
+    const loadPageData = async () => {
+      const posts = await fetchPosts(page);
+      store.posts = posts.data;
+      store.totalPages = Math.ceil(posts.meta.totalCount / 9);
+      store.localPosts = []; // Clear local posts when new page is loaded
+      store.searchTerm = ""; // Clear search term when new page is loaded
+    };
+
+    loadPageData();
   });
 
   return (
@@ -71,10 +95,11 @@ export default component$(() => {
         posts={store.localPosts.length ? store.localPosts : store.posts}
         searchTerm={store.searchTerm}
       />
-
-      {
-        //TODO: Add Pagination component
-      }
+      <Pagination
+        currentPage={store.currentPage}
+        totalPages={store.totalPages}
+        onPageChange$={(page) => (store.currentPage = page)}
+      />
     </section>
   );
 });
