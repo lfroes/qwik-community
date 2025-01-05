@@ -26,7 +26,7 @@ export const PostCard = component$<PostCardProps>((props) => {
         />
         <p
           class="text-muted-foreground"
-          dangerouslySetInnerHTML={truncateText(post.body)}
+          dangerouslySetInnerHTML={truncateText(truncateText(post.body))}
         />
       </Link>
     </div>
