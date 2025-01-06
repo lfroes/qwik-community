@@ -1,4 +1,6 @@
-type User = {
+import type { FieldValues } from "@modular-forms/qwik";
+
+export type User = {
   username: string;
 };
 
@@ -25,7 +27,8 @@ export interface PostsResponse {
   };
 }
 
-export interface CreatePostInput {
+export type CreatePostInput = {
   title: string;
   body: string;
-}
+  user: User;
+};

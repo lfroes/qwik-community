@@ -1,5 +1,15 @@
-import { component$, Slot } from "@builder.io/qwik";
+import {
+  component$,
+  Slot,
+  useContextProvider,
+  useStore,
+} from "@builder.io/qwik";
 import { type RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
+import {
+  PostsContext,
+  type PostsStore,
+  initialPostsState,
+} from "~/lib/store/posts.context";
 
 export const useServerTimeLoader = routeLoader$(() => {
   return {
@@ -19,9 +29,13 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  const store = useStore<PostsStore>(initialPostsState);
+
+  useContextProvider(PostsContext, store);
+
   return (
     <>
-      <main class="bg-background min-h-screen">
+      <main class="min-h-screen bg-background">
         <div class="container py-8">
           <Slot />
         </div>
