@@ -5,6 +5,9 @@ export const GET_POSTS = `
         id
         title
         body
+        user {
+          username
+        }
       }
     }
   }

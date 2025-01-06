@@ -33,8 +33,6 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => postsSignal.value.data);
 
-    console.log(store.searchPosts);
-
     store.posts = postsSignal.value.data;
     store.totalPages = Math.ceil(store.combinedPosts.length / 9);
     store.combinedPosts = [...store.localPosts, ...store.posts];
@@ -63,6 +61,7 @@ export default component$(() => {
     const start = (store.currentPage - 1) * 9;
     const end = start + 9;
 
+    // Maybe change to a normal if statement, it`s more readable`
     store.currentPosts = store.searchPosts.length
       ? store.searchPosts.slice(start, end)
       : store.combinedPosts.slice(start, end);
