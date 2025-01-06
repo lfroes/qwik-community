@@ -1,13 +1,13 @@
 export const GET_POSTS = `
-  query GetPosts($options: PageQueryOptions) {
-    posts(options: $options) {
+  query GetPosts {
+    posts {
       data {
         id
         title
         body
-      }
-      meta {
-        totalCount
+        user {
+          username
+        }
       }
     }
   }

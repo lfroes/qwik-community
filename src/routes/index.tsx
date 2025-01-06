@@ -1,9 +1,4 @@
-import {
-  component$,
-  useContextProvider,
-  useStore,
-  useTask$,
-} from "@builder.io/qwik";
+import { component$, useStore, useTask$, useContext } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { graphqlClient } from "~/lib/graphql/client";
 import { GET_POSTS } from "~/lib/graphql/queries";
@@ -17,83 +12,77 @@ import {
 import { Posts } from "~/components/Posts/Posts";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
 import { Pagination } from "~/components/Pagination/Pagination";
+import { CreatePostButton } from "~/components/CreatePostButton/CreatePostButton";
 
-async function fetchPosts(page: number = 1, limit: number = 9) {
-  const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS, {
-    options: {
-      paginate: {
-        page,
-        limit,
-      },
-    },
-  });
+async function fetchPosts() {
+  const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS);
 
   return posts;
 }
 
 export const usePostsLoader = routeLoader$(async () => {
-  return await fetchPosts(1);
+  return await fetchPosts();
 });
 
 export default component$(() => {
   const postsSignal = usePostsLoader();
-  const store = useStore<PostsStore>({
-    ...initialPostsState,
-    posts: postsSignal.value.data,
-    totalPages: Math.ceil(postsSignal.value.meta.totalCount / 9),
-  });
 
-  useContextProvider(PostsContext, store);
+  const store = useContext(PostsContext);
+  useContext(PostsContext, store);
+
+  useTask$(({ track }) => {
+    track(() => postsSignal.value.data);
+
+    store.posts = postsSignal.value.data;
+    store.totalPages = Math.ceil(store.combinedPosts.length / 9);
+    store.combinedPosts = [...store.localPosts, ...store.posts];
+  });
 
   useTask$(({ track }) => {
     track(() => store.searchTerm);
 
+    if (store.searchTerm === "") return;
+
     //WARN:: This is without a debounce funtion because the amount of data is small.
     // In case of a large amount of data, consider using a debounce function.
 
-    const filtered = store.posts.filter(
+    const filtered = store.combinedPosts.filter(
       (post) =>
         post.title.toLowerCase().includes(store.searchTerm.toLowerCase()) ||
         post.body.toLowerCase().includes(store.searchTerm.toLowerCase()),
     );
 
-    store.localPosts = filtered;
+    store.searchPosts = filtered.slice(0, 9);
   });
 
-  // Hanlde Pagination
   useTask$(({ track }) => {
-    const page = track(() => store.currentPage);
+    track(() => store.currentPage);
 
-    if (page === 1) return;
+    const start = (store.currentPage - 1) * 9;
+    const end = start + 9;
 
-    //TODO: Create a Suspense loader for this
-
-    const loadPageData = async () => {
-      const posts = await fetchPosts(page);
-      store.posts = posts.data;
-      store.totalPages = Math.ceil(posts.meta.totalCount / 9);
-      store.localPosts = []; // Clear local posts when new page is loaded
-      store.searchTerm = ""; // Clear search term when new page is loaded
-    };
-
-    loadPageData();
+    // Maybe change to a normal if statement, it`s more readable`
+    store.currentPosts = store.searchPosts.length
+      ? store.searchPosts.slice(start, end)
+      : store.combinedPosts.slice(start, end);
   });
 
   return (
     <section>
       <div class="mb-8 flex items-center justify-between">
         <h1 class="text-4xl font-bold">Posts</h1>
-        {
-          //TODO: Add button to create Posts
-        }
+        <CreatePostButton text="Create Post" />
       </div>
       <SearchBar
         value={store.searchTerm}
         onSearch$={(value) => (store.searchTerm = value)}
       />
       <Posts
-        posts={store.localPosts.length ? store.localPosts : store.posts}
+        posts={
+          store.searchPosts.length ? store.searchPosts : store.currentPosts
+        }
         searchTerm={store.searchTerm}
+        currentPage={store.currentPage}
       />
       <Pagination
         currentPage={store.currentPage}

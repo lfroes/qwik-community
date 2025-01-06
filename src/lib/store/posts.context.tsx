@@ -6,7 +6,10 @@ export interface PostsStore {
   searchTerm: string;
   currentPage: number;
   totalPages: number;
-  localPosts: Post[]; 
+  localPosts: Post[];
+  searchPosts: Post[]; 
+  combinedPosts: Post[]; 
+  currentPosts: Post[]; 
 }
 
 export const PostsContext = createContextId<PostsStore>('posts-context');
@@ -17,5 +20,8 @@ export const initialPostsState: PostsStore = {
   searchTerm: "",
   currentPage: 1,
   totalPages: 1,
-  localPosts: [] 
+  localPosts: [],
+  searchPosts: [],
+  combinedPosts: [],
+  currentPosts: [],
 }
