@@ -16,6 +16,7 @@ import { SearchBar } from "~/components/SearchBar/SearchBar";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { CreatePostButton } from "~/components/CreatePostButton/CreatePostButton";
 import { PostSkeleton } from "~/components/PostSkeleton/PostSkeleton";
+import { ThemeToggle } from "~/components/ThemeToggle/ThemeToggle";
 
 async function fetchPosts() {
   const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS);
@@ -89,9 +90,12 @@ export default component$(() => {
 
   return (
     <section>
-      <div class="mb-8 flex items-center justify-between">
-        <h1 class="text-4xl font-bold">Posts</h1>
-        <CreatePostButton text="Create Post" />
+      <div class="mb-8 flex flex-col items-center justify-between gap-3 md:flex-row md:gap-0">
+        <h1 class="text-4xl font-bold dark:text-white">Posts</h1>
+        <div class="flex gap-3">
+          <ThemeToggle />
+          <CreatePostButton text="Create Post" />
+        </div>
       </div>
       <SearchBar
         value={store.searchTerm}

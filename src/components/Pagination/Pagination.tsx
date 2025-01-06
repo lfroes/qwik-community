@@ -19,7 +19,7 @@ export const Pagination = component$<PaginationProps>((props) => {
       >
         Previous
       </Button>
-      <span class="flex items-center px-4">
+      <span class="flex items-center px-4 dark:text-muted-foreground">
         Page {currentPage} of {totalPages}
       </span>
       <Button

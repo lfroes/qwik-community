@@ -65,13 +65,13 @@ export default component$(() => {
         </Link>
       </div>
       <article class="prose prose-lg max-w-none">
-        <h1 class="mb-4 text-4xl font-bold">{post.title}</h1>
+        <h1 class="mb-4 text-4xl font-bold dark:text-gray-500">{post.title}</h1>
         <p class="mb-6 text-muted-foreground">
           {post.createdAt
             ? formatDate(post.createdAt)
             : formatDate(randomDate())}
         </p>
-        <div class="whitespace-pre-wrap">{post.body}</div>
+        <div class="whitespace-pre-wrap dark:text-gray-600">{post.body}</div>
         <p class="mt-2 text-muted-foreground">
           Written by: {post.user.username}
         </p>
