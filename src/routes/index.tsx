@@ -1,18 +1,21 @@
-import { component$, useStore, useTask$, useContext } from "@builder.io/qwik";
+import {
+  component$,
+  useTask$,
+  useVisibleTask$,
+  useContext,
+  useSignal,
+} from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { graphqlClient } from "~/lib/graphql/client";
 import { GET_POSTS } from "~/lib/graphql/queries";
 import { PostsResponse } from "~/types/post";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import {
-  PostsContext,
-  type PostsStore,
-  initialPostsState,
-} from "~/lib/store/posts.context";
+import { PostsContext } from "~/lib/store/posts.context";
 import { Posts } from "~/components/Posts/Posts";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { CreatePostButton } from "~/components/CreatePostButton/CreatePostButton";
+import { PostSkeleton } from "~/components/PostSkeleton/PostSkeleton";
 
 async function fetchPosts() {
   const { posts } = await graphqlClient.request<PostsResponse>(GET_POSTS);
@@ -26,9 +29,8 @@ export const usePostsLoader = routeLoader$(async () => {
 
 export default component$(() => {
   const postsSignal = usePostsLoader();
-
   const store = useContext(PostsContext);
-  useContext(PostsContext, store);
+  const isLoading = useSignal<boolean>(true);
 
   useTask$(({ track }) => {
     track(() => postsSignal.value.data);
@@ -58,6 +60,8 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => store.currentPage);
 
+    // We Can apply loading here if we change to get the data page by page
+
     const start = (store.currentPage - 1) * 9;
     const end = start + 9;
 
@@ -65,6 +69,22 @@ export default component$(() => {
     store.currentPosts = store.searchPosts.length
       ? store.searchPosts.slice(start, end)
       : store.combinedPosts.slice(start, end);
+  });
+
+  // ISSUE:: The use of useVisibleTask$ is not recommended,
+  // but as we have a open issue on useResource$ we will be using for now
+  // see https://github.com/QwikDev/qwik/issues/4328 for more information
+
+  //WARN:: This code is just to simulate a real-life scenario,
+  // it should not be used in production
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(2000);
+
+    isLoading.value = false;
   });
 
   return (
@@ -77,13 +97,17 @@ export default component$(() => {
         value={store.searchTerm}
         onSearch$={(value) => (store.searchTerm = value)}
       />
-      <Posts
-        posts={
-          store.searchPosts.length ? store.searchPosts : store.currentPosts
-        }
-        searchTerm={store.searchTerm}
-        currentPage={store.currentPage}
-      />
+      {isLoading.value ? (
+        <PostSkeleton />
+      ) : (
+        <Posts
+          posts={
+            store.searchPosts.length ? store.searchPosts : store.currentPosts
+          }
+          searchTerm={store.searchTerm}
+          currentPage={store.currentPage}
+        />
+      )}
       <Pagination
         currentPage={store.currentPage}
         totalPages={store.totalPages}
