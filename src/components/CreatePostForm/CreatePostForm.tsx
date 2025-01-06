@@ -1,6 +1,5 @@
-import { component$, $, type QRL } from "@builder.io/qwik";
+import { component$, type QRL } from "@builder.io/qwik";
 import {
-  type InitialValues,
   useForm,
   type SubmitHandler,
   minLength,
@@ -48,7 +47,7 @@ export const CreatePostForm = component$<CreatePostFormProps>((props) => {
       >
         {(field, props) => (
           <>
-            <label class="mb-2 block text-sm font-medium">Title2</label>
+            <label class="mb-2 block text-sm font-medium">Title</label>
             <Input
               {...props}
               type="text"
