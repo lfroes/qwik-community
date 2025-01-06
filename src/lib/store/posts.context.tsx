@@ -9,7 +9,7 @@ export interface PostsStore {
   localPosts: Post[];
   searchPosts: Post[]; 
   combinedPosts: Post[]; 
-  currentPosts: Post[]; 
+  currentPosts: Post[];
 }
 
 export const PostsContext = createContextId<PostsStore>('posts-context');
