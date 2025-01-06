@@ -1,4 +1,4 @@
-import { component$, $ } from "@builder.io/qwik";
+import { component$, $, type QRL } from "@builder.io/qwik";
 import {
   type InitialValues,
   useForm,
@@ -12,7 +12,7 @@ import { Input } from "../ui/Input";
 import type { CreatePostInput, User } from "~/types/post";
 
 export interface CreatePostFormProps {
-  onSubmit$: SubmitHandler<CreatePostInput>;
+  onSubmit$: QRL<SubmitHandler<CreatePostInput>>;
 }
 
 type PostForm = {
