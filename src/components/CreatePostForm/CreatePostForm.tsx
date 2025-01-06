@@ -47,7 +47,9 @@ export const CreatePostForm = component$<CreatePostFormProps>((props) => {
       >
         {(field, props) => (
           <>
-            <label class="mb-2 block text-sm font-medium">Title</label>
+            <label class="mb-2 block text-sm font-medium dark:text-muted-foreground">
+              Title
+            </label>
             <Input
               {...props}
               type="text"
@@ -67,10 +69,12 @@ export const CreatePostForm = component$<CreatePostFormProps>((props) => {
       >
         {(field, props) => (
           <>
-            <label class="mb-2 block text-sm font-medium">Content</label>
+            <label class="mb-2 block text-sm font-medium dark:text-muted-foreground">
+              Content
+            </label>
             <textarea
               {...props}
-              class="flex min-h-[150px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="flex min-h-[150px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-muted-foreground"
               value={field.value}
               placeholder="Write your post here..."
             />

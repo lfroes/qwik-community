@@ -48,7 +48,9 @@ export default component$(() => {
 
   return (
     <section class="mx-auto max-w-2xl">
-      <h1 class="mb-8 text-4xl font-bold">Create a New Post</h1>
+      <h1 class="mb-8 text-4xl font-bold dark:text-muted-foreground">
+        Create a New Post
+      </h1>
       <CreatePostForm
         onSubmit$={$((values: CreatePostInput) => {
           createPost

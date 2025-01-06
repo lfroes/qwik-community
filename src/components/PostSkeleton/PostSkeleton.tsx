@@ -13,12 +13,12 @@ export const PostSkeleton = component$(() => {
           >
             <div class="space-y-4 p-6">
               {/* Title */}
-              <div class="h-4 w-3/4 rounded bg-gray-200"></div>
+              <div class="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-400"></div>
               {/* Content */}
               <div class="space-y-2">
-                <div class="h-3 rounded bg-gray-200"></div>
-                <div class="h-3 w-5/6 rounded bg-gray-200"></div>
-                <div class="w-4/2 h-3 rounded bg-gray-200"></div>
+                <div class="h-3 rounded bg-gray-200 dark:bg-gray-500"></div>
+                <div class="h-3 w-5/6 rounded bg-gray-200 dark:bg-gray-400"></div>
+                <div class="w-4/2 dark:b-gray-500 h-3 rounded bg-gray-200 dark:bg-gray-500"></div>
               </div>
             </div>
           </div>
